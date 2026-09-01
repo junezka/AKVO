@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/style.css">
+    <title>Document</title>
+</head>
+<body class="formulario">
+    <section>
+        <header class="header">
+                <nav style="background: rgba(21, 29, 59, 0.96);">
+                    <a href="index.html">Inicio</a>
+                    <img src="../images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+                </nav>
+        </header>
+    </section>
+    <section>
+        <p> Diagnóstico empresarial · AKVO Consulting </p>
+        <h1>Antes de comenzar </h1>
+        <p>Cuéntanos brevemente sobre tu empresa. Esto nos ayuda a contextualizar mejor tu diagnóstico.</p>
+    </section>
+
+    <!-- 1. Se agregó el id al formulario y la acción de redirección aquí -->
+    <form id="formDiagnostico" action="modulo1.html">
+        <section>
+            <label for="nombre">¿Cómo se llama tu empresa o emprendimiento? *</label>
+            <br>
+            <input type="text" id="nombre" name="nombre" required class="name">
+            <br>
+            <label for="opcion">¿En qué etapa se encuentra tu negocio? *</label>
+            <div class="button-group">
+                <label class="btn-option">
+                    <input type="radio" name="opcion" value="1" required> Idea / Pre-startup
+                </label>
+                <label class="btn-option">
+                    <input type="radio" name="opcion" value="2"> Startup (0-2 años)
+                </label>
+                <label class="btn-option">
+                    <input type="radio" name="opcion" value="3"> Crecimiento (3-7 años)
+                </label>
+                <label class="btn-option">
+                    <input type="radio" name="opcion" value="4"> Consolidacion (7+ años)
+                </label>
+            </div>
+            <p class="name">Tu privacidad importa. Las respuestas son confidenciales y se usan únicamente para generar tu diagnóstico personalizado. No compartimos tu información con terceros.</p>
+            
+            <!-- 2. Se eliminó la etiqueta <a> de adentro -->
+            <button type="submit" id="miBoton" disabled> 
+                Comenzar Diagnóstico →
+            </button>
+        </section>
+    </form>
+
+    <script>
+      // 3. Script corregido para validar ambos campos en tiempo real
+      const formulario = document.getElementById('formDiagnostico');
+      const inputNombre = document.getElementById('nombre');
+      const boton = document.getElementById('miBoton');
+
+      formulario.addEventListener('input', function() {
+        // Valida que el nombre no esté vacío
+        const nombreValido = inputNombre.value.trim() !== '';
+        
+        // Valida que al menos un radio button de 'opcion' esté seleccionado
+        const radioSeleccionado = formulario.querySelector('input[name="opcion"]:checked') !== null;
+
+        // El botón solo se activa si ambas condiciones son verdaderas
+        if (nombreValido && radioSeleccionado) {
+          boton.disabled = false;
+        } else {
+          boton.disabled = true;
+        }
+      });
+    </script>
+</body>
+</html>
