@@ -80,39 +80,37 @@ function renderChart(data) {
 }
 
 async function saveDiagnosisToDb() {
-    const companyName = localStorage.getItem('akvoEmpresaNombre') || 'Sin nombre';
-    const etapaNegocio = localStorage.getItem('akvoEtapaNegocio') || 'No especificada';
+    const diagnosticoId = Number(localStorage.getItem('akvoDiagnosticoId'));
+    if (!diagnosticoId) {
+        console.warn('No hay diagnóstico activo para finalizar.');
+        return;
+    }
 
     const payload = {
-        action: 'save-result',
-        empresaNombre: companyName,
-        etapaNegocio,
         financiera: pFinanciera,
         contable: pContable,
         procesos: pProcesos,
         digital: pDigital,
         estrategia: pEstrategia,
-        totalScore: promedioTotal
+        total_score: promedioTotal
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/diagnostico', {
+        const response = await fetch(`/api/diagnosticos/${diagnosticoId}/finalizar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
-            console.warn('No se pudo guardar el diagnóstico en MySQL. Se mantiene la versión local.');
+            console.warn('No se pudo guardar el diagnóstico final en MySQL.');
             return;
         }
 
         const result = await response.json();
-        if (result && result.success) {
-            localStorage.setItem('akvoDiagnosticoId', String(result.id || result.data?.id || ''));
-        }
+        console.log('Diagnóstico final guardado:', result);
     } catch (error) {
-        console.warn('Servidor MySQL no disponible. Se mantiene el diagnóstico en localStorage.', error.message);
+        console.warn('Servidor Python no disponible. Se mantiene el diagnóstico en localStorage.', error.message);
     }
 }
 

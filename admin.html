@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AKVO Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f7fb; margin: 0; color: #1d2433; }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    h1 { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 10px 25px rgba(0,0,0,.05); }
+    th, td { border-bottom: 1px solid #e5e7eb; padding: 12px 14px; text-align: left; }
+    th { background: #0f172a; color: white; }
+    tr:hover { background: #f8fafc; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+    .badge-completado { background: #dcfce7; color: #166534; }
+    .badge-en_proceso { background: #fef3c7; color: #92400e; }
+    .detail { margin-top: 30px; background: white; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,.05); }
+    .detail h2 { margin-top: 0; }
+    .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+    .box strong { display: block; margin-bottom: 6px; color: #475569; }
+    .module-item { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .muted { color: #64748b; }
+    button { background: #0f172a; color: white; border: none; padding: 10px 14px; cursor: pointer; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin AKVO</h1>
+    <button id="refreshBtn">Actualizar</button>
+    <div id="listado"></div>
+
+    <div class="detail">
+      <h2>Detalle del diagnóstico</h2>
+      <div id="detalle"></div>
+    </div>
+  </div>
+
+  <script>
+    const listadoEl = document.getElementById('listado');
+    const detalleEl = document.getElementById('detalle');
+
+    async function cargarDiagnosticos() {
+      try {
+        const res = await fetch('/api/diagnosticos');
+        const data = await res.json();
+
+        if (!data.success || !Array.isArray(data.data)) {
+          listadoEl.innerHTML = '<p>No se pudo cargar la lista.</p>';
+          return;
+        }
+
+        if (!data.data.length) {
+          listadoEl.innerHTML = '<p>No hay diagnósticos guardados todavía.</p>';
+          detalleEl.innerHTML = '<p>Selecciona un diagnóstico.</p>';
+          return;
+        }
+
+        const rows = data.data.map(item => `
+          <tr>
+            <td>${item.id}</td>
+            <td>${item.empresa_nombre}</td>
+            <td>${item.etapa_negocio}</td>
+            <td>${item.total_score ?? 0}</td>
+            <td><span class="badge badge-${item.estado}">${item.estado}</span></td>
+            <td><button data-id="${item.id}">Ver detalle</button></td>
+          </tr>
+        `).join('');
+
+        listadoEl.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Etapa</th>
+                <th>Score total</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+
+        document.querySelectorAll('button[data-id]').forEach(btn => {
+          btn.addEventListener('click', () => cargarDetalle(btn.dataset.id));
+        });
+      } catch (error) {
+        listadoEl.innerHTML = '<p>Error al conectarse al backend.</p>';
+      }
+    }
+
+    async function cargarDetalle(id) {
+      try {
+        const res = await fetch(`/api/diagnosticos/${id}`);
+        const data = await res.json();
+
+        if (!data.success || !data.data) {
+          detalleEl.innerHTML = '<p>No se encontró el diagnóstico.</p>';
+          return;
+        }
+
+        const item = data.data;
+        const modulos = [
+          ['financiera', item.financiera, item.respuestas_financiera],
+          ['contable', item.contable, item.respuestas_contable],
+          ['procesos', item.procesos, item.respuestas_procesos],
+          ['digital', item.digital, item.respuestas_digital],
+          ['estrategia', item.estrategia, item.respuestas_estrategia]
+        ];
+
+        detalleEl.innerHTML = `
+          <div class="meta">
+            <div class="box"><strong>Empresa</strong>${item.empresa_nombre}</div>
+            <div class="box"><strong>Etapa</strong>${item.etapa_negocio}</div>
+            <div class="box"><strong>Estado</strong>${item.estado}</div>
+            <div class="box"><strong>Total</strong>${item.total_score ?? 0}</div>
+            <div class="box"><strong>Financiera</strong>${item.financiera ?? 0}</div>
+            <div class="box"><strong>Contable</strong>${item.contable ?? 0}</div>
+            <div class="box"><strong>Procesos</strong>${item.procesos ?? 0}</div>
+            <div class="box"><strong>Digital</strong>${item.digital ?? 0}</div>
+            <div class="box"><strong>Estrategia</strong>${item.estrategia ?? 0}</div>
+          </div>
+          <h3>Módulos guardados</h3>
+          ${modulos.map(m => `
+            <div class="module-item">
+              <strong>${m[0]}</strong>
+              <div class="muted">Score: ${m[1] ?? 0}</div>
+              <pre>${JSON.stringify(typeof m[2] === 'string' ? JSON.parse(m[2]) : (m[2] || {}), null, 2)}</pre>
+            </div>
+          `).join('')}
+        `;
+      } catch (error) {
+        detalleEl.innerHTML = '<p>Error al cargar el detalle.</p>';
+      }
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', cargarDiagnosticos);
+    cargarDiagnosticos();
+  </script>
+</body>
+</html>

@@ -1,10 +1,13 @@
 :host{all:initial!important;
   display:block!important;
+    margin:0!important;
 }
 body{
     display: block;
-    margin-inline: auto;
+    margin: 0;
+    padding: 0;
     position: relative;
+    max-width: 100%;
 
 }
 .header {
@@ -338,7 +341,7 @@ body {
     background-color: #f4f6f9;
     color: #1a1a3a;
     margin: 0;
-    padding: 20px;
+    padding: 0;
 }
 
 .dashboard-container {

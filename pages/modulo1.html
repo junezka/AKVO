@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="/styles/style.css">
     <title>Módulo 1 - Diagnóstico</title>
 </head>
 <body class="formulario">
     <section>
         <header class="header">
                 <nav style="background: rgba(21, 29, 59, 0.96);">
-                    <a href="formulario1.html">Anterior</a>
-                    <img src="../images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+                    <a href="/pages/formulario1.html">Anterior</a>
+                    <img src="/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
                     <span class="text-xs font-medium" style="color: rgba(255, 255, 255, 0.5);">1/5</span>
                 </nav>
         </header>
@@ -32,7 +32,7 @@
     </section>
 
     <section>
-    <form id="form1" action="modulo2.html" method="GET">
+    <form id="form1" action="/pages/modulo2.html" method="GET">
         
         <!-- PREGUNTA 1 -->
         <div>
@@ -166,27 +166,64 @@
         }
     });
 
-    // Guardar los datos al enviar el formulario
-    formulario.addEventListener('submit', function(event) {
-        event.preventDefault(); // Evita que la página cambie inmediatamente
+    async function ensureDiagnosticoId() {
+        const existingId = Number(localStorage.getItem('akvoDiagnosticoId'));
+        if (existingId) return existingId;
 
-        // Obtener los valores seleccionados y sumarlos
+        const nombre = localStorage.getItem('akvoEmpresaNombre') || 'Sin nombre';
+        const etapa = localStorage.getItem('akvoEtapaNegocio') || 'No especificada';
+
+        const response = await fetch('/api/diagnosticos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                empresa_nombre: nombre,
+                etapa_negocio: etapa
+            })
+        });
+
+        const data = await response.json();
+        if (data && data.id) {
+            localStorage.setItem('akvoDiagnosticoId', String(data.id));
+            return Number(data.id);
+        }
+
+        return null;
+    }
+
+    formulario.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
         const q1 = parseInt(formulario.querySelector('input[name="p1"]:checked').value);
         const q2 = parseInt(formulario.querySelector('input[name="p2"]:checked').value);
         const q3 = parseInt(formulario.querySelector('input[name="p3"]:checked').value);
         const q4 = parseInt(formulario.querySelector('input[name="p4"]:checked').value);
         const q5 = parseInt(formulario.querySelector('input[name="p5"]:checked').value);
-        
-        const suma = q1 + q2 + q3 + q4 + q5; // El máximo es 25
 
-        // Convertir la suma a una escala de 0 a 100 para el gráfico
+        const suma = q1 + q2 + q3 + q4 + q5;
         const porcentajeFinanciera = (suma / 25) * 100;
 
-        // Guardar en localStorage
         localStorage.setItem('scoreFinanciera', porcentajeFinanciera);
 
-        // Redirigir al módulo 2
-        window.location.href = "modulo2.html"; 
+        const diagnosticoId = await ensureDiagnosticoId();
+        if (diagnosticoId) {
+            try {
+                await fetch('/api/modulos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        diagnostico_id: diagnosticoId,
+                        modulo: 'financiera',
+                        score: porcentajeFinanciera,
+                        respuestas: { p1: q1, p2: q2, p3: q3, p4: q4, p5: q5 }
+                    })
+                });
+            } catch (error) {
+                console.warn('No se pudo guardar el módulo financiera.', error);
+            }
+        }
+
+        window.location.href = "/pages/modulo2.html";
     });
 </script></body>
 </html>
