@@ -1,0 +1,23 @@
+{
+  "name": "akvo-consulting-diagnostico",
+  "version": "1.0.0",
+  "description": "Backend para guardar diagnósticos AKVO en MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "akvo",
+    "mysql",
+    "diagnostico",
+    "express"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.4.2"
+  }
+}

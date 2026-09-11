@@ -72,6 +72,14 @@
           boton.disabled = true;
         }
       });
+
+      formulario.addEventListener('submit', function() {
+        const nombreEmpresa = inputNombre.value.trim();
+        const etapaSeleccionada = formulario.querySelector('input[name="opcion"]:checked');
+
+        localStorage.setItem('akvoEmpresaNombre', nombreEmpresa);
+        localStorage.setItem('akvoEtapaNegocio', etapaSeleccionada ? etapaSeleccionada.parentElement.textContent.trim() : 'No especificada');
+      });
     </script>
 </body>
 </html>

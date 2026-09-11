@@ -79,10 +79,48 @@ function renderChart(data) {
     });
 }
 
+async function saveDiagnosisToDb() {
+    const companyName = localStorage.getItem('akvoEmpresaNombre') || 'Sin nombre';
+    const etapaNegocio = localStorage.getItem('akvoEtapaNegocio') || 'No especificada';
+
+    const payload = {
+        action: 'save-result',
+        empresaNombre: companyName,
+        etapaNegocio,
+        financiera: pFinanciera,
+        contable: pContable,
+        procesos: pProcesos,
+        digital: pDigital,
+        estrategia: pEstrategia,
+        totalScore: promedioTotal
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/diagnostico', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            console.warn('No se pudo guardar el diagnóstico en MySQL. Se mantiene la versión local.');
+            return;
+        }
+
+        const result = await response.json();
+        if (result && result.success) {
+            localStorage.setItem('akvoDiagnosticoId', String(result.id || result.data?.id || ''));
+        }
+    } catch (error) {
+        console.warn('Servidor MySQL no disponible. Se mantiene el diagnóstico en localStorage.', error.message);
+    }
+}
+
 // Ejecutar las funciones al cargar la página
-window.onload = () => {
+window.onload = async () => {
     updateScoreCard(userResults);
     renderChart(userResults);
+    await saveDiagnosisToDb();
 };
 // Base de datos de recomendaciones por área (basado en tu diseño)
 const areasData = [
