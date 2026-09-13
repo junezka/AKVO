@@ -59,17 +59,15 @@
       // 3. Script corregido para validar ambos campos en tiempo real
       const formulario = document.getElementById('formDiagnostico');
       const inputNombre = document.getElementById('nombre');
+      const inputContacto = document.getElementById('contacto');
       const boton = document.getElementById('miBoton');
 
       formulario.addEventListener('input', function() {
-        // Valida que el nombre no esté vacío
         const nombreValido = inputNombre.value.trim() !== '';
-        
-        // Valida que al menos un radio button de 'opcion' esté seleccionado
+        const contactoValido = inputContacto.value.trim() !== '';
         const radioSeleccionado = formulario.querySelector('input[name="opcion"]:checked') !== null;
 
-        // El botón solo se activa si ambas condiciones son verdaderas
-        if (nombreValido && radioSeleccionado) {
+        if (nombreValido && contactoValido && radioSeleccionado) {
           boton.disabled = false;
         } else {
           boton.disabled = true;
@@ -78,9 +76,11 @@
 
       formulario.addEventListener('submit', function() {
         const nombreEmpresa = inputNombre.value.trim();
+        const contactoEmpresa = inputContacto.value.trim();
         const etapaSeleccionada = formulario.querySelector('input[name="opcion"]:checked');
 
         localStorage.setItem('akvoEmpresaNombre', nombreEmpresa);
+        localStorage.setItem('akvoContacto', contactoEmpresa);
         localStorage.setItem('akvoEtapaNegocio', etapaSeleccionada ? etapaSeleccionada.parentElement.textContent.trim() : 'No especificada');
       });
     </script>

@@ -172,6 +172,7 @@
         if (existingId) return existingId;
 
         const nombre = localStorage.getItem('akvoEmpresaNombre') || 'Sin nombre';
+        const contacto = localStorage.getItem('akvoContacto') || 'Sin contacto';
         const etapa = localStorage.getItem('akvoEtapaNegocio') || 'No especificada';
 
         const response = await fetch('/api/diagnosticos', {
@@ -179,6 +180,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 empresa_nombre: nombre,
+                empresa_contacto: contacto,
                 etapa_negocio: etapa
             })
         });

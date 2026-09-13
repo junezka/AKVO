@@ -2,94 +2,79 @@ import json
 import os
 from pathlib import Path
 
-import mysql.connector
+import psycopg
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_file, redirect
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-from mysql.connector import Error
+from psycopg.rows import dict_row
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "localhost"),
-    "port": int(os.getenv("DB_PORT", "3306")),
-    "user": os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASSWORD", ""),
-    "database": os.getenv("DB_NAME", "akvo-db"),
-    "autocommit": True,
-}
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 BASE_DIR = Path(__file__).resolve().parent
 
 
 def get_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL no configurada")
+    return psycopg.connect(DATABASE_URL, autocommit=True)
 
 
 def init_db():
     try:
-        conn = mysql.connector.connect(
-            host=DB_CONFIG["host"],
-            port=DB_CONFIG["port"],
-            user=DB_CONFIG["user"],
-            password=DB_CONFIG["password"],
-            autocommit=True,
-        )
-        cursor = conn.cursor()
-        cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{DB_CONFIG['database']}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
-        cursor.close()
-        conn.close()
-
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS diagnosticos (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                empresa_nombre VARCHAR(255) NOT NULL,
-                empresa_contacto VARCHAR(255) NOT NULL,
-                etapa_negocio VARCHAR(120) DEFAULT 'No especificada',
-                financiera DECIMAL(5,2) DEFAULT 0,
-                contable DECIMAL(5,2) DEFAULT 0,
-                procesos DECIMAL(5,2) DEFAULT 0,
-                digital DECIMAL(5,2) DEFAULT 0,
-                estrategia DECIMAL(5,2) DEFAULT 0,
-                total_score DECIMAL(5,2) DEFAULT 0,
-                respuestas_financiera JSON DEFAULT NULL,
-                respuestas_contable JSON DEFAULT NULL,
-                respuestas_procesos JSON DEFAULT NULL,
-                respuestas_digital JSON DEFAULT NULL,
-                respuestas_estrategia JSON DEFAULT NULL,
-                estado VARCHAR(30) DEFAULT 'en_proceso',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            )
-            """
-        )
-        for column in (
-            "respuestas_financiera",
-            "respuestas_contable",
-            "respuestas_procesos",
-            "respuestas_digital",
-            "respuestas_estrategia",
-        ):
+        with conn.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT COUNT(*) FROM information_schema.COLUMNS
-                WHERE TABLE_SCHEMA = %s AND TABLE_NAME = 'diagnosticos' AND COLUMN_NAME = %s
-                """,
-                (DB_CONFIG["database"], column),
+                CREATE TABLE IF NOT EXISTS diagnosticos (
+                    id BIGSERIAL PRIMARY KEY,
+                    empresa_nombre TEXT NOT NULL,
+                    empresa_contacto TEXT NOT NULL,
+                    etapa_negocio TEXT DEFAULT 'No especificada',
+                    financiera NUMERIC(5,2) DEFAULT 0,
+                    contable NUMERIC(5,2) DEFAULT 0,
+                    procesos NUMERIC(5,2) DEFAULT 0,
+                    digital NUMERIC(5,2) DEFAULT 0,
+                    estrategia NUMERIC(5,2) DEFAULT 0,
+                    total_score NUMERIC(5,2) DEFAULT 0,
+                    respuestas_financiera JSONB DEFAULT NULL,
+                    respuestas_contable JSONB DEFAULT NULL,
+                    respuestas_procesos JSONB DEFAULT NULL,
+                    respuestas_digital JSONB DEFAULT NULL,
+                    respuestas_estrategia JSONB DEFAULT NULL,
+                    estado TEXT DEFAULT 'en_proceso',
+                    created_at TIMESTAMPTZ DEFAULT NOW(),
+                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                )
+                """
             )
-            if cursor.fetchone()[0] == 0:
-                cursor.execute(f"ALTER TABLE diagnosticos ADD COLUMN {column} JSON DEFAULT NULL")
-        cursor.execute("DROP TABLE IF EXISTS modulos")
+            for column in (
+                "respuestas_financiera",
+                "respuestas_contable",
+                "respuestas_procesos",
+                "respuestas_digital",
+                "respuestas_estrategia",
+            ):
+                cursor.execute(
+                    """
+                    SELECT EXISTS(
+                        SELECT 1
+                        FROM information_schema.columns
+                        WHERE table_name = 'diagnosticos' AND column_name = %s
+                    )
+                    """,
+                    (column,),
+                )
+                if not cursor.fetchone()[0]:
+                    cursor.execute(f"ALTER TABLE diagnosticos ADD COLUMN {column} JSONB DEFAULT NULL")
+            cursor.execute("DROP TABLE IF EXISTS modulos")
         conn.commit()
-        cursor.close()
         conn.close()
-    except Error as exc:
+    except Exception as exc:
         print(f"Error initializing DB: {exc}")
 
 
@@ -97,35 +82,41 @@ def init_db():
 def health():
     try:
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT 1")
-        cursor.fetchone()
-        cursor.close()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
         conn.close()
-        return jsonify({"ok": True, "message": "Conexión a MySQL correcta"})
-    except Error as exc:
-        return jsonify({"ok": False, "message": "No se pudo conectar a MySQL", "error": str(exc)}), 500
+        return jsonify({"ok": True, "message": "Conexión a Supabase PostgreSQL correcta"})
+    except Exception as exc:
+        return jsonify({"ok": False, "message": "No se pudo conectar a la base de datos", "error": str(exc)}), 500
 
 
 @app.post("/api/diagnosticos")
 def create_diagnostico():
     data = request.get_json(silent=True) or {}
     nombre = (data.get("empresa_nombre") or "Sin nombre").strip()
+    contacto = (data.get("empresa_contacto") or data.get("contacto") or "Sin contacto").strip()
     etapa = data.get("etapa_negocio") or "No especificada"
+
+    if not contacto:
+        contacto = "Sin contacto"
 
     try:
         conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(
-            "INSERT INTO diagnosticos (empresa_nombre, etapa_negocio, estado) VALUES (%s, %s, 'en_proceso')",
-            (nombre, etapa),
-        )
-        diagnostico_id = cursor.lastrowid
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO diagnosticos (empresa_nombre, empresa_contacto, etapa_negocio, estado)
+                VALUES (%s, %s, %s, 'en_proceso')
+                RETURNING id
+                """,
+                (nombre, contacto, etapa),
+            )
+            diagnostico_id = cursor.fetchone()[0]
         conn.commit()
-        cursor.close()
         conn.close()
         return jsonify({"success": True, "id": diagnostico_id, "message": "Diagnóstico creado"})
-    except Error as exc:
+    except Exception as exc:
         return jsonify({"success": False, "message": "Error al crear el diagnóstico", "error": str(exc)}), 500
 
 
@@ -159,26 +150,24 @@ def save_module():
 
     try:
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            f"""
-            UPDATE diagnosticos
-            SET {score_column} = %s,
-                {response_column} = %s,
-                updated_at = NOW()
-            WHERE id = %s
-            """,
-            (float(score), json.dumps(respuestas, ensure_ascii=False), diagnostico_id),
-        )
-        if cursor.rowcount == 0:
-            cursor.close()
-            conn.close()
-            return jsonify({"success": False, "message": "Diagnóstico no encontrado."}), 404
+        with conn.cursor() as cursor:
+            cursor.execute(
+                f"""
+                UPDATE diagnosticos
+                SET {score_column} = %s,
+                    {response_column} = %s,
+                    updated_at = NOW()
+                WHERE id = %s
+                """,
+                (float(score), json.dumps(respuestas, ensure_ascii=False), diagnostico_id),
+            )
+            if cursor.rowcount == 0:
+                conn.close()
+                return jsonify({"success": False, "message": "Diagnóstico no encontrado."}), 404
         conn.commit()
-        cursor.close()
         conn.close()
         return jsonify({"success": True, "message": f"Módulo {modulo} guardado"})
-    except Error as exc:
+    except Exception as exc:
         return jsonify({"success": False, "message": "Error al guardar el módulo", "error": str(exc)}), 500
 
 
@@ -196,35 +185,34 @@ def finalize_diagnostico(diagnostico_id):
 
     try:
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            UPDATE diagnosticos
-            SET financiera = %s,
-                contable = %s,
-                procesos = %s,
-                digital = %s,
-                estrategia = %s,
-                total_score = %s,
-                estado = 'completado',
-                updated_at = NOW()
-            WHERE id = %s
-            """,
-            (
-                float(scores["financiera"]),
-                float(scores["contable"]),
-                float(scores["procesos"]),
-                float(scores["digital"]),
-                float(scores["estrategia"]),
-                float(scores["total_score"]),
-                diagnostico_id,
-            ),
-        )
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE diagnosticos
+                SET financiera = %s,
+                    contable = %s,
+                    procesos = %s,
+                    digital = %s,
+                    estrategia = %s,
+                    total_score = %s,
+                    estado = 'completado',
+                    updated_at = NOW()
+                WHERE id = %s
+                """,
+                (
+                    float(scores["financiera"]),
+                    float(scores["contable"]),
+                    float(scores["procesos"]),
+                    float(scores["digital"]),
+                    float(scores["estrategia"]),
+                    float(scores["total_score"]),
+                    diagnostico_id,
+                ),
+            )
         conn.commit()
-        cursor.close()
         conn.close()
         return jsonify({"success": True, "message": "Diagnóstico final guardado"})
-    except Error as exc:
+    except Exception as exc:
         return jsonify({"success": False, "message": "Error al guardar diagnóstico final", "error": str(exc)}), 500
 
 
@@ -232,15 +220,14 @@ def finalize_diagnostico(diagnostico_id):
 def list_diagnosticos():
     try:
         conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT * FROM diagnosticos ORDER BY created_at DESC"
-        )
-        diagnosticos = cursor.fetchall()
-        cursor.close()
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(
+                "SELECT * FROM diagnosticos ORDER BY created_at DESC"
+            )
+            diagnosticos = cursor.fetchall()
         conn.close()
         return jsonify({"success": True, "data": diagnosticos})
-    except Error as exc:
+    except Exception as exc:
         return jsonify({"success": False, "message": "Error listando diagnósticos", "error": str(exc)}), 500
 
 
@@ -248,16 +235,14 @@ def list_diagnosticos():
 def get_diagnostico(diagnostico_id):
     try:
         conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM diagnosticos WHERE id = %s", (diagnostico_id,))
-        diagnostico = cursor.fetchone()
-
-        cursor.close()
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("SELECT * FROM diagnosticos WHERE id = %s", (diagnostico_id,))
+            diagnostico = cursor.fetchone()
         conn.close()
         if not diagnostico:
             return jsonify({"success": False, "message": "Diagnóstico no encontrado"}), 404
         return jsonify({"success": True, "data": diagnostico})
-    except Error as exc:
+    except Exception as exc:
         return jsonify({"success": False, "message": "Error consultando diagnóstico", "error": str(exc)}), 500
 
 
@@ -272,6 +257,9 @@ def serve_frontend(filename):
     if file_path.exists():
         return send_file(str(file_path))
     return jsonify({"success": False, "message": "Archivo no encontrado"}), 404
+
+
+init_db()
 
 
 @app.route("/<filename>")
@@ -304,6 +292,8 @@ def admin_page():
     return send_file(str(BASE_DIR / "admin.html"))
 
 
+init_db()
+
+
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5001")), debug=False)

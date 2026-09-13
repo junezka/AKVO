@@ -61,6 +61,7 @@
           <tr>
             <td>${item.id}</td>
             <td>${item.empresa_nombre}</td>
+            <td>${item.empresa_contacto ?? ''}</td>
             <td>${item.etapa_negocio}</td>
             <td>${item.total_score ?? 0}</td>
             <td><span class="badge badge-${item.estado}">${item.estado}</span></td>
@@ -74,6 +75,7 @@
               <tr>
                 <th>ID</th>
                 <th>Empresa</th>
+                <th>Contacto</th>
                 <th>Etapa</th>
                 <th>Score total</th>
                 <th>Estado</th>
@@ -114,6 +116,7 @@
         detalleEl.innerHTML = `
           <div class="meta">
             <div class="box"><strong>Empresa</strong>${item.empresa_nombre}</div>
+            <div class="box"><strong>Contacto</strong>${item.empresa_contacto ?? ''}</div>
             <div class="box"><strong>Etapa</strong>${item.etapa_negocio}</div>
             <div class="box"><strong>Estado</strong>${item.estado}</div>
             <div class="box"><strong>Total</strong>${item.total_score ?? 0}</div>
