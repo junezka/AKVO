@@ -4,113 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/AKVO/styles/style.css">
 </head>
 <body>
     <section class="header">
         <header>
-        <nav>
-                <img src="/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+            <nav>
+                <img src="/AKVO/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
                 <ul>
-                    <a href="#metodologia">Metodología</a>
-                    <a href="#servicios">Servicios</a>
-                    <button><a href="/pages/formulario1.html">Diagnóstico Gratuito</a></button>
+                    <li class="enlace-menu"><a href="#section1">Metodología</a></li>
+                    <li class="enlace-menu"><a href="#servicios">Servicios</a></li>
+                    <li><button><a href="/AKVO/pages/formulario1.html">Diagnóstico Gratuito</a></button></li>
                 </ul>
             </nav>
+
             <div class="fondo"></div>
             <div class="fondo1"></div>
-            <h6>AKVO Consulting · Diagnóstico Empresarial</h6>
-            <h1>
-                Un emprendedor más tranquilo, 
-                <br>una empresa mejor preparada
-                <span style="background-color: #2d8c6a; padding: 0px 10px 2px; display: inline;">para crecer</span>
-            </h1>
-            <p>En menos de 10 minutos obtén un diagnóstico completo en las áreas financiera, contable, tributaria, procesos y transformación digital.</p>
-            <div>
-                <button><a href="/pages/formulario1.html">Iniciar Diagnóstico gratuito</a></button>
-                    <a href="#section1" class="btn2">Conoce la metodologia</a>
-                    <div class="info">
-                        <div>
-                            <div><h2>25</h2></div>
-                            <div>Preguntas</div>
+            <section class="header-section">
+                <div class="header-container">
+                    <!-- 1. Subtítulo superior -->
+                    <p class="espaciado">AKVO CONSULTING · DIAGNÓSTICO EMPRESARIAL</p>
+                    
+                    <!-- 2. Título Principal (El texto destacado va en un span) -->
+                    <h1 class="header-title">
+                        Un emprendedor más tranquilo, <br> 
+                        una empresa mejor preparada <span class="badge-green">para crecer</span>
+                    </h1>
+                    
+                    <!-- 3. Párrafo descriptivo -->
+                    <p class="header-description">
+                        En menos de 10 minutos obtén un diagnóstico completo en las áreas <br>
+                        financiera, contable, tributaria, procesos y transformación digital.
+                    </p>
+                    
+                    <!-- 4. Bloque de Botones de Acción -->
+                    <div class="header-buttons">
+                        <button class="btn-primary"><a href="/AKVO/pages/formulario1.html">Diagnóstico gratuito → </a></button>
+                        <a href="#section1" class="btn-secondary">Conoce la metodología</a>
+                    </div>
+                    
+                    <!-- 5. Bloque de Estadísticas / Datos -->
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <h2>25</h2>
+                            <p>Preguntas</p>
                         </div>
-                        <div>
-                            <div><h2>5</h2></div>
-                            <div>Áreas Clave</div>
+                        <div class="stat-item">
+                            <h2>5</h2>
+                            <p>Áreas Clave</p>
                         </div>
-                        <div>
-                            <div><h2>10 min.</h2></div>
-                            <div>Aprox</div>
+                        <div class="stat-item">
+                            <h2>10 min.</h2>
+                            <p>Aprox</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
             </div>
         </header>
     </section>
     
     <section id="section1" class="section1">
-        <h3>Nuestra Metodología</h3>
-        <h2>La fórmula del 
-            <br>
-            <h3>crecimiento sostenible</h3>
-        </h2>
-        <p>En AKVO Consulting trabajamos bajo una metodología propia que combina cuatro pilares fundamentales para transformar organizaciones con orden, propósito y visión de futuro.</p>
-        <div class="cards">
-            <div class="card">
-                <div>Capacitar para Fortalecer</div>
-                <div style="color:#6b7a99"> Desarrollamos competencias en equipos y líderes.</div>
+        <div class="section1-container">
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="columna-contenido">
+                <div>
+                    <h3 style="letter-spacing: 2px; text-transform: uppercase;">Nuestra Metodología</h3>
+                    <h2 style="font-size: 36px; font-weight: 300;">La fórmula del <br><strong style="color: rgb(63, 168, 127);">crecimiento sostenible</strong></h2>
+                    <p>En AKVO Consulting trabajamos bajo una metodología propia que combina cuatro pilares fundamentales para transformar organizaciones con orden, propósito y visión de futuro.</p>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <div class="icono-negro">C²</div>
+                        <div>
+                            <strong>Capacitar para Fortalecer</strong>
+                            <div>Desarrollamos competencias en equipos y líderes.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icono-negro">F²</div>
+                        <div>
+                            <strong>Formar para Transformar</strong>
+                            <div>Formación continua que genera cambios reales.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icono-negro">A</div>
+                        <div>
+                            <strong>Acompañar</strong>
+                            <div>Presencia permanente en el proceso de evolución.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icono-negro">T</div>
+                        <div>
+                            <strong>Transformar</strong>
+                            <div >Resultados medibles con impacto sostenible.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card">Formar para Transformar 
-                <div style="color:#6b7a99"> Formación continua que genera cambios reales.</div>
+            
+            <!-- COLUMNA DERECHA -->
+            <div class="columna-ecuacion">
+                <div class="card2">
+                    <h4>La ecuación AKVO</h4>
+                    <h1>H² = C² + F² + A + T</h1>
+                    <p>Donde <strong style="color: rgb(63, 168, 127);">H²</strong> representa el crecimiento holístico y sostenible de tu organización</p>
+                </div>
+                <h3 class="frase-cita">"Acompañar a las organizaciones a crecer con orden, sostenibilidad y visión de futuro."</h3>
             </div>
-            <div class="card">Acompañar 
-                <div style="color:#6b7a99"> Presencia permanente en el proceso de evolución.</div>
-            </div>
-            <div class="card">Transformar
-                <div style="color:#6b7a99"> Resultados medibles con impacto sostenible.</div>
-            </div>
-        </div>
-        <div>
-            <div class="card2">
-                <h6>La ecuación AKVO</h6>
-                <h1>H² = C² + F² + A + T</h1>
-                <h6>Donde H² representa el crecimiento holístico y sostenible de tu organización</h6>
-            </div>
-            <h3>"Acompañar a las organizaciones a crecer con orden, sostenibilidad y visión de futuro."</h3>
         </div>
     </section>
+
     <section id="servicios" class="section2">
-        <div>
-            <h3>Áreas de diagnóstico</h3>
+        <div class="section2-container">
+            <h3 style="letter-spacing: 2px; text-transform: uppercase;">Áreas de diagnóstico</h3>
             <h4>Cinco dimensiones,</h4>
-            <h4>una visión integral</h4>
+            <h4 ><strong>una visión integral</strong></h4>
             <p>Nuestro diagnóstico evalúa el estado real de tu negocio en las áreas que más impactan su crecimiento y sostenibilidad.</p>
         </div>
-        <div class="cards">
-            <div class="card">
+        <div class="section2-cards">
+            <div class="card3">
                 <svg viewBox="0 0 24 24" fill="none" class="icono1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
                 <h3>Modulo A</h3>
                 <h2>Financiera y Económica</h2>
                 <p>Evalúa tu control financiero, flujo de caja y toma de decisiones económicas.</p>
             </div>
-            <div class="card">
+            <div class="card3">
                 <svg viewBox="0 0 24 24" fill="none"  class="icono2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 9h6M9 12h6M9 15h4"></path></svg>
                 <h3>Modulo B</h3>
                 <h2>Contable y Tributaria</h2>
                 <p>Mide el cumplimiento contable, manejo tributario y ordenamiento documental.</p>
             </div>
-            <div class="card">
+            <div class="card3">
                 <svg viewBox="0 0 24 24" fill="none" class="icono1"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"></path></svg>
                 <h3>Modulo C</h3>
                 <h2>Procesos y Calidad</h2>
                 <p>Revisa qué tan documentada, medible y mejorable es tu operación.</p>
             </div>
-            <div class="card">
+            <div class="card3">
                 <svg viewBox="0 0 24 24" fill="none"  class="icono2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
                 <h3>Modulo D</h3>
                 <h2>Transformación Digital</h2>
                 <p>Analiza tu madurez digital, herramientas tecnológicas y cultura de datos.</p>
             </div>
-            <div class="card">
+            <div class="card3">
                 <svg viewBox="0 0 24 24" fill="none" class="icono1"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
                 <h3>Modulo E</h3>
                 <h2>Estrategia y Sostenibilidad</h2>
@@ -119,20 +160,20 @@
             <div class="card2">
             <h1>¿Listo para conocer tu situación?</h1>
             <p>El diagnóstico es gratuito, confidencial y toma menos de 10 minutos.</p>
-        <button><a href="/pages/formulario1.html">Iniciar ahora</a></button>
+        <button><a href="/AKVO/pages/formulario1.html">Iniciar ahora</a></button>
         </div>
         </div>
     </section>
-    <section class="section1">
+    <section class="section3">
         <div>
-            <h6>Potenciar el futuro</span>
+            <span style="letter-spacing: 2px; text-transform: uppercase;">Potenciar el futuro</span>
             <h2>Tu negocio merece crecer <br> con <span style="font-weight: 600; color: rgb(45, 140, 106);">claridad y dirección</span></h2>
             <p>Miles de emprendedores y empresarios operan sin ver con claridad dónde están parados. El primer paso hacia el crecimiento sostenible es el diagnóstico honesto de tu situación actual.</p>
-            <button style="box-shadow: 0 8px 32px #2d8c6a66;"><a href="/pages/formulario1.html">Comenzar Diagnóstico gratuito</a></button>
+            <button style="box-shadow: 0 8px 32px #2d8c6a66;"><a href="/AKVO/pages/formulario1.html">Comenzar Diagnóstico gratuito</a></button>
             <p>Sin registro. Sin tarjeta. 100% gratuito.</p>
     </section>
     <footer>
-        <img src="/images/image-5-DxJ_jtyd.png" alt="" class="logo">
+        <img src="/AKVO/images/image-5-DxJ_jtyd.png" alt="" class="logo">
         <p>© 2026 AKVO Consulting. Todos los derechos reservados</p>
         <h3>Sinergizar · Agilizar · Transformar</h3>
     </footer>

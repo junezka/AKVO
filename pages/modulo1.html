@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/AKVO/styles/style.css">
     <title>Módulo 1 - Diagnóstico</title>
 </head>
 <body class="formulario">
     <section>
         <header class="header">
                 <nav style="background: rgba(21, 29, 59, 0.96);">
-                    <a href="/pages/formulario1.html">Anterior</a>
-                    <img src="/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+                    <a href="/AKVO/pages/formulario1.html">Anterior</a>
+                    <img src="/AKVO/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
                     <span class="text-xs font-medium" style="color: rgba(255, 255, 255, 0.5);">1/5</span>
                 </nav>
         </header>
     </section>
-    <section>
-        <h1>Módulo 1 Financiera y Económica </h1>
+    
+    <section class="header-modulos-container">
+        <div class="header-modulos">
+            <div>
+                <svg viewBox="0 0 24 24" fill="none" class="icono1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
+            </div>
+            <div>
+                <span style="color: #389e70; letter-spacing: 2px; text-transform: uppercase;"> <strong>Módulo 1</strong></span>
+                <h2><strong>Financiera y Económica</strong></h2>
+            </div>
+        </div>
         <span>Evalúa tu control financiero, flujo de caja y toma de decisiones económicas.</span>
     </section>
 
@@ -32,12 +41,12 @@
     </section>
 
     <section>
-    <form id="form1" action="/pages/modulo2.html" method="GET">
+    <form id="form1" action="/AKVO/pages/modulo2.html" method="GET">
         
         <!-- PREGUNTA 1 -->
         <div>
-            <p><span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 flex-shrink-0" style="background: rgb(238, 240, 247); color: rgb(107, 122, 153);">1</span> ¿Conoces y gestionas activamente el flujo de caja de tu negocio mes a mes?</p>
-            <div class="escala-group">
+            <p><span class="number">1</span> ¿Conoces y gestionas activamente el flujo de caja de tu negocio mes a mes?</p>
+            <div class="number-group">
                 <input type="radio" id="p1-o1" name="p1" value="1" required>
                 <label for="p1-o1" class="escala-button" title="Nunca / No existe">1</label>
 
@@ -57,8 +66,8 @@
 
         <!-- PREGUNTA 2 -->
         <div>
-            <p><span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 flex-shrink-0" style="background: rgb(238, 240, 247); color: rgb(107, 122, 153);">2</span> ¿Tienes un presupuesto anual definido y haces seguimiento periódico?</p>
-            <div class="escala-group">
+            <p><span class="number">2</span> ¿Tienes un presupuesto anual definido y haces seguimiento periódico?</p>
+            <div class="number-group">
                 <input type="radio" id="p2-o1" name="p2" value="1" required>
                 <label for="p2-o1" class="escala-button" title="Nunca / No existe">1</label>
 
@@ -78,8 +87,8 @@
 
         <!-- PREGUNTA 3 -->
         <div>
-            <p><span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 flex-shrink-0" style="background: rgb(238, 240, 247); color: rgb(107, 122, 153);">3</span> ¿Analizas la rentabilidad de tus productos, servicios o líneas de negocio?</p>
-            <div class="escala-group">
+            <p><span class="number">3</span> ¿Analizas la rentabilidad de tus productos, servicios o líneas de negocio?</p>
+            <div class="number-group">
                 <input type="radio" id="p3-o1" name="p3" value="1" required>
                 <label for="p3-o1" class="escala-button" title="Nunca / No existe">1</label>
 
@@ -99,8 +108,8 @@
 
         <!-- PREGUNTA 4 -->
         <div>
-            <p><span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 flex-shrink-0" style="background: rgb(238, 240, 247); color: rgb(107, 122, 153);">4</span> ¿Identificas claramente tus costos fijos, variables y punto de equilibrio?</p>
-            <div class="escala-group">
+            <p><span class="number">4</span> ¿Identificas claramente tus costos fijos, variables y punto de equilibrio?</p>
+            <div class="number-group">
                 <input type="radio" id="p4-o1" name="p4" value="1" required>
                 <label for="p4-o1" class="escala-button" title="Nunca / No existe">1</label>
 
@@ -120,8 +129,8 @@
 
         <!-- PREGUNTA 5 -->
         <div>
-            <p><span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 flex-shrink-0" style="background: rgb(238, 240, 247); color: rgb(107, 122, 153);">5</span> ¿Tomas decisiones de inversión o expansión basadas en análisis financiero?</p>
-            <div class="escala-group">
+            <p><span class="number">5</span> ¿Tomas decisiones de inversión o expansión basadas en análisis financiero?</p>
+            <div class="number-group">
                 <input type="radio" id="p5-o1" name="p5" value="1" required>
                 <label for="p5-o1" class="escala-button" title="Nunca / No existe">1</label>
 
@@ -138,11 +147,7 @@
                 <label for="p5-o5" class="escala-button" title="Siempre / Excelente">5</label>
             </div>
         </div>
-        <br>
-        <section>
-        <!-- Botón de enviar dentro de la etiqueta form -->
         <button type="submit" id="miBoton" disabled>Continuar. Contable y Tributaria →</button>
-        </section>
     </form>
 </section>
 <script>
@@ -158,11 +163,9 @@
         const p5Valida = formulario.querySelector('input[name="p5"]:checked') !== null;
 
         if (p1Valida && p2Valida && p3Valida && p4Valida && p5Valida) {
-            boton.disabled = false;
-            boton.classList.add('activo'); 
+          boton.disabled = false;
         } else {
-            boton.disabled = true;
-            boton.classList.remove('activo');
+          boton.disabled = true;
         }
     });
 
@@ -225,7 +228,7 @@
             }
         }
 
-        window.location.href = "/pages/modulo2.html";
+        window.location.href = "/AKVO/pages/modulo2.html";
     });
 </script></body>
 </html>

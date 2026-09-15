@@ -46,7 +46,6 @@ def init_db():
                     respuestas_procesos JSONB DEFAULT NULL,
                     respuestas_digital JSONB DEFAULT NULL,
                     respuestas_estrategia JSONB DEFAULT NULL,
-                    estado TEXT DEFAULT 'en_proceso',
                     created_at TIMESTAMPTZ DEFAULT NOW(),
                     updated_at TIMESTAMPTZ DEFAULT NOW()
                 )
@@ -106,8 +105,8 @@ def create_diagnostico():
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                INSERT INTO diagnosticos (empresa_nombre, empresa_contacto, etapa_negocio, estado)
-                VALUES (%s, %s, %s, 'en_proceso')
+                INSERT INTO diagnosticos (empresa_nombre, empresa_contacto, etapa_negocio)
+                VALUES (%s, %s, %s)
                 RETURNING id
                 """,
                 (nombre, contacto, etapa),
@@ -195,7 +194,6 @@ def finalize_diagnostico(diagnostico_id):
                     digital = %s,
                     estrategia = %s,
                     total_score = %s,
-                    estado = 'completado',
                     updated_at = NOW()
                 WHERE id = %s
                 """,

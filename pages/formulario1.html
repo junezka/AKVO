@@ -3,50 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/AKVO/styles/style.css">
     <title>Document</title>
 </head>
 <body class="formulario">
     <section>
         <header class="header">
                 <nav style="background: rgba(21, 29, 59, 0.96);">
-                    <a href="/">Inicio</a>
-                    <img src="/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+                    <a href="/AKVO/pages/index.html">Inicio</a>
+                    <img src="/AKVO/images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
                 </nav>
         </header>
     </section>
-    <section>
-        <p> Diagnóstico empresarial · AKVO Consulting </p>
-        <h1>Antes de comenzar </h1>
+    <section class="header-form">
+        <p class="sombreado-verde"> Diagnóstico empresarial · AKVO Consulting </p>
+        <h2 style="font-size: 40px;">Antes de <strong>comenzar</strong></h2>
         <p>Cuéntanos brevemente sobre tu empresa. Esto nos ayuda a contextualizar mejor tu diagnóstico.</p>
     </section>
 
     <!-- 1. Se agregó el id al formulario y la acción de redirección aquí -->
-    <form id="formDiagnostico" action="/pages/modulo1.html">
-        <section>
+    <form id="formDiagnostico" action="/AKVO/pages/modulo1.html">
+        <section class="card-form">
+
+            <div class="form-group">
             <label for="nombre">¿Cómo se llama tu empresa o emprendimiento? *</label>
-            <br>
             <input type="text" id="nombre" name="nombre" required class="name">
-            <label for="contacto"> Numero de contacto o correo electronico*</label>
-            <br>
-            <input type="text" id="contacto" name="contacto" required class="name">
-            <br>
-            <label for="opcion">¿En qué etapa se encuentra tu negocio? *</label>
-            <div class="button-group">
-                <label class="btn-option">
-                    <input type="radio" name="opcion" value="1" required> Idea / Pre-startup
-                </label>
-                <label class="btn-option">
-                    <input type="radio" name="opcion" value="2"> Startup (0-2 años)
-                </label>
-                <label class="btn-option">
-                    <input type="radio" name="opcion" value="3"> Crecimiento (3-7 años)
-                </label>
-                <label class="btn-option">
-                    <input type="radio" name="opcion" value="4"> Consolidacion (7+ años)
-                </label>
             </div>
-            <p class="name">Tu privacidad importa. Las respuestas son confidenciales y se usan únicamente para generar tu diagnóstico personalizado. No compartimos tu información con terceros.</p>
+
+            <div class="form-group">
+            <label for="contacto"> Numero de contacto o correo electronico*</label>
+            <input type="text" id="contacto" name="contacto" required class="name">
+            </div>
+
+            <div class="form-group">
+                <label for="opcion">¿En qué etapa se encuentra tu negocio? *</label>
+                <div class="button-group">
+                    <label class="btn-option">
+                        <input type="radio" name="opcion" value="1" required> Idea / Pre-startup
+                    </label>
+                    <label class="btn-option">
+                        <input type="radio" name="opcion" value="2"> Startup (0-2 años)
+                    </label>
+                    <label class="btn-option">
+                        <input type="radio" name="opcion" value="3"> Crecimiento (3-7 años)
+                    </label>
+                    <label class="btn-option">
+                        <input type="radio" name="opcion" value="4"> Consolidacion (7+ años)
+                    </label>
+                </div>
+            </div>
+
+            <p class="name" style="font-size: 0.8rem; color: #666; margin: 24px 0;"> <strong>Tu privacidad importa.</strong> Las respuestas son confidenciales y se usan únicamente para generar tu diagnóstico personalizado. No compartimos tu información con terceros.</p>
             
             <!-- 2. Se eliminó la etiqueta <a> de adentro -->
             <button type="submit" id="miBoton" disabled> 

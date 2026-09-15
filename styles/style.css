@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Raleway';
+    src: url('../fonts/static/Raleway-Light.ttf') format('truetype');
+}
+* {
+    font-family: 'Raleway', sans-serif !important;
+    font-weight: 200;
+}
 :host{all:initial!important;
   display:block!important;
     margin:0!important;
@@ -19,38 +27,60 @@ body{
 }
 footer{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 20px;
     justify-content: space-between;
     align-items: center;
     color: #0f1628;
     background: rgba(21, 29, 59, 0.96); 
     padding: 14px 0px;
     img{
-        filter: brightness(0) invert(1);}
+        filter: brightness(0) invert(1);
+    }
 }
 nav {    
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: #ffffff;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Empuja el logo a la izquierda y la lista a la derecha */
+    align-items: center;
     box-sizing: border-box;    
     background: transparent; 
     padding: 20px 4%; 
     z-index: 100;
     transition: background 0.3s ease, padding 0.4s ease, box-shadow 0.3s ease;
-    img{
-        filter: brightness(0) invert(1);}
 }
 nav.nav-oscuro {
     background: linear-gradient(135deg, rgba(15, 21, 43, 0.98) 0%, rgba(21, 29, 59, 0.95) 100%);
     backdrop-filter: blur(12px);
     padding: 12px 4%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+/* Estilos de la imagen del logo (Separado para CSS puro) */
+nav .logo {
+    filter: brightness(0) invert(1); /* Mantiene tu efecto blanco */
+    height: 40px; /* Ajusta el tamaño de tu logo si es necesario */
+    width: auto;
+}
+
+/* Estilos de la lista de navegación */
+nav ul {    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px; /* Da una separación limpia entre tus enlaces y el botón */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Color de tus enlaces de texto */
+nav ul a {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .fondo{
@@ -92,10 +122,148 @@ header p {
     margin: 20px 4%;
     opacity: 0.9;
 }
-.info{
-  display: flex;
-  gap: -10;
+
+/* ==========================================
+   ESTILOS PARA LA SECCIÓN PRINCIPAL (header)
+   ========================================== */
+
+.header-section {
+    position: relative;
+    min-height: 100vh; /* Ocupa todo el alto de la pantalla */
+    /* Asegúrate de enlazar aquí tu fondo de imagen oscuro si no lo tienes en HTML */
+    background: #0f152b; 
+    display: flex;
+    align-items: center; /* Centra todo el bloque verticalmente */
+    box-sizing: border-box;
+    padding-top: 120px; /* Evita que el menú fijo tape el contenido */
 }
+
+/* Contenedor principal: Esto controla el ancho de todo el contenido */
+.header-container {
+    width: 92%; /* Mismo ancho alineado con el menú de navegación */
+    max-width: 1400px; /* Evita que en pantallas gigantes se deforme */
+    margin: 0 auto; /* Centra el bloque de contenido en la pantalla */
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Espaciado uniforme hacia abajo entre bloques */
+}
+
+/* Subtítulo superior */
+.espaciado {
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px; /* Separa un poco las letras para verse fino */
+    color: rgba(255, 255, 255, 0.6); /* Color blanco semitransparente */
+    margin: 0;
+}
+
+/* Título Principal */
+.header-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 52px; /* Tamaño grande y elegante */
+    font-weight: 200; /* Letra ultra delgada de Raleway */
+    color: #ffffff;
+    line-height: 1.2;
+    margin: 0;
+    max-width: 900px; /* Permite que el título se expanda horizontalmente */
+}
+
+/* El recuadro verde de "para crecer" */
+.badge-green {
+    display: inline-block;
+    background-color: #10b981; /* Color verde esmeralda de tu diseño */
+    color: #ffffff;
+    padding: 2px 15px;
+    border-radius: 4px;
+    font-weight: 300;
+}
+
+/* Párrafo descriptivo */
+.header-description {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Contenedor de Botones */
+.header-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px; /* Separación horizontal entre los dos botones */
+    margin-top: 10px;
+}
+
+/* Botón Verde */
+.btn-primary {
+    background-color: #10b981;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Botón Transparente (Conoce la metodología) */
+.btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 12px 24px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* ==========================================
+   ESTILOS PARA LAS ESTADÍSTICAS (LOS NÚMEROS)
+   ========================================== */
+
+.header-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 10%; /* Espaciado generoso entre cada métrica */
+    margin-top: 30px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2%;
+}
+
+/* Los números grandes (25, 5, 10 min) */
+.stat-item h2 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Las etiquetas debajo de los números */
+.stat-item p {
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+strong{
+    font-weight: 800 !important; /* Hace que se vea grueso y resalte */
+}
+
 a{
     justify-content: space-between;
     color: rgba(255, 255, 255, 0.8);
@@ -123,29 +291,62 @@ h3{
     width: 25%;
 }
 .section1{
-  margin: 20px 4%;
+    width: 92%;
+    max-width: 1200px;
+    padding: 60px 0;
 }
-.section2{
-  align-content: center;
-    background-color: #f7f8fc;
-    margin: 20px 4%;
 
+.section1-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr; /* Divide el espacio de forma proporcional */
+    gap: 60px;                         /* Espacio de separación en el medio */
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto;                    /* Centra todo el bloque en la pantalla */
+    align-items: start;
 }
-.cards {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease;
+
+/* El icono negro pequeño de cada tarjeta */
+.icono-negro {
+    background-color: #0f1628;
+    color: #389e70;
+    font-weight: 700 !important;
+    font-size: 15px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px; /* Evita que se deforme */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.columna-ecuacion {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    margin-top: 20%;
+}
+
 .card {
+    display: flex!important;
+    flex-direction: row!important;
+    gap: 20px;
+    background: white;
+    flex: 1;
+    min-width: 300px;
+    border-radius: 16px;
+    border: 1px solid #eef0f7;
+    padding: 20px 5%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     box-sizing: border-box;
     background-color: #ffffff;
-    display: grid;
+}
+
+.card h3 {
+    font-size: 12px;
+    color: #666;
+    letter-spacing: 1px;
 }
 .card2{
     background-color: #1e2a4a;
@@ -154,6 +355,105 @@ h3{
     max-width: 100%;
     padding: 20px;
     border-radius: 10px;
+}
+
+.frase-cita {
+    font-size: 20px;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 380px;
+    margin: 0 auto;
+    font-weight: 700;
+}
+
+.section2{
+    align-content: center;
+    background-color: #f7f8fc;
+    margin: 20px 4%;
+    width: 92%;
+    max-width: 1200px;
+}
+.section2-container{
+    gap: 60px;                         /* Espacio de separación en el medio */
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto;                    /* Centra todo el bloque en la pantalla */
+    text-align: center;
+}
+.section2-container h4{
+    font-size: 36px; 
+    margin: 0;
+}
+
+.section2-cards{
+    width: 92%;
+    max-width: 1200px;
+    margin: 60px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px; 
+}
+/* ESTILO INDIVIDUAL DE CADA TARJETA BLANCA (.CARD3) */
+.card3 {
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #eef0f7;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los textos e iconos a la izquierda */
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover que descubrimos antes */
+.card3:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(15, 22, 40, 0.08);
+}
+
+/* Estilos de los textos internos de los módulos */
+.card3 h3 {
+    color: #389e70; /* "Modulo A", "Modulo B" en verde */
+    font-size: 13px;
+    font-weight: 600 !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 4px 0 0 0;
+}
+
+.card3 h2 {
+    color: #151d3b; /* Título principal del módulo oscuro */
+    font-size: 20px;
+    font-weight: 700 !important;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.card3 p {
+    color: #8a94a6; /* Texto descriptivo gris */
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- ESTILO DE LOS ICONOS SVG --- */
+.icono1, .icono2 {
+    width: 46px;
+    height: 46px;
+    padding: 10px;
+    border-radius: 8px;
+    stroke: currentColor;
+    stroke-width: 1.5; /* Grosor de las líneas del SVG */
+}
+.section3{
+    width: 92%;
+    max-width: 1200px;
+    margin: 100px auto;
+    text-align: center;
 }
 .btn2{
     padding-top: 90px; 
@@ -204,21 +504,19 @@ h3{
   color: #389e70;
   border-color: #389e70;
 }
-#miBoton:disabled {
-    background-color: #cccccc; 
-    color: #666666;
-    cursor: not-allowed; 
+.header-form{
+    text-align: center;
 }
 .name {
     width: 100%;
     margin: 0 auto;
     color:#8a94a6;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;           
-  box-sizing: border-box;  
-  text-align: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;           
+    box-sizing: border-box;  
+    text-align: center;
   }
 .formulario{
     background-color: #eef0f7;
@@ -227,40 +525,88 @@ form{
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  min-height: 60px;        
-  padding: 15px;           
+  padding: 20px;           
   box-sizing: border-box;  
-  text-align: center;
   width: 90%;
-  max-width: 500px;
-  margin: 40px auto;
+  max-width: 700px;
+  margin: 20px auto;
+  font-size: 0.875rem;
 }
-.escala{
+#miBoton:disabled {
+    width: 100%;
+    padding: 12px;
+    background-color: #cccccc; 
+    color: #533e3e;
+    cursor: not-allowed; 
+}
+
+.header-modulos {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Centra el icono verticalmente con el título */
+    margin-top: 2%;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+.header-modulos-container{
+    align-items: flex-start;
+    width: 90%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.sombreado-verde{
+    background-color: rgba(45, 140, 106, 0.15);
+    color: #2d8c6a;
+    border-radius: 20px;
+    border: 1px solid rgba(45, 140, 106, 0.15);
+    font-size: 14px;
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.form-group {
+  margin-bottom: 24px; /* Separación entre preguntas */
+  text-align: left;    /* Alinea el texto a la izquierda para mejor lectura */
+}
+
+.form-group label,
+.label-titulo {
+  display: block;      /* Fuerza a que el label ocupe su propia línea */
+  margin-bottom: 8px;  /* Espacio entre la pregunta y el input */
+  color: #333;
+  font-weight: 500;
+}
+.form-group p{
+    font-size: 0.8rem;
+    color: #666;
+    margin: 24px 0;
+}
+
+.escala {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    width: 90%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 15px;
     box-sizing: border-box;
-    padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 10px;
-  border-radius: 10px;
-  width: 90%;
-  margin: 40px auto;
-  background-color: #2d8c6a14;
+    border-radius: 10px;
+    background-color: #2d8c6a14;
     border: 1px solid #ccc;
-    color:#6b7a99
+    color:#6b7a99;
+    font-size: 12px;
 }
-.escala-group {
-  display: flex !important;
-  width: 100%;
-  gap: 10px; 
-  box-sizing: border-box;
-  margin-top: 10px;
-  margin-bottom: 25px;
-}
-.escala-group input[type="radio"] {
-  display: none !important; 
+.escala strong{
+    font-weight: 700;
+    color: #151d3b;
 }
 .escala-button{
-    flex: 1;
+  flex: 1;
   min-width: 44px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -280,34 +626,32 @@ form{
   cursor: pointer;
   box-sizing: border-box;
 }
-
-.escala-button:hover {
-  background-color: #e0e0e0;
+.number-group {
+  display: flex !important;
+  width: 100%;
+  gap: 10px; 
+  box-sizing: border-box;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+.number-group input[type="radio"] {
+  display: none !important; 
 }
 
-.escala-group input[type="radio"]:checked + .escala-button {
+.number-group input[type="radio"]:checked + .escala-button {
   background-color: #151d3b;
   color: #3fa87f;
   border-color: #3fa87f;
 }
 
-
-@media (max-width: 400px) {
-  .button-group {
-    /* Cambia a una sola columna para que los botones tengan todo el ancho disponible */
-    grid-template-columns: 1fr; 
-    grid-template-rows: auto;
-  }
-  
-  .btn-option {
-    font-size: 14px;
+.number{
+    background: rgb(238, 240, 247); 
+    color: rgb(107, 122, 153);
+    font-weight: 700;
+    border-radius: 50%;
     padding: 10px;
-  }
-  .escala {
-    /* Cambia a una sola columna para que los botones tengan todo el ancho disponible */
-    grid-template-columns: 1fr; 
-    grid-template-rows: auto;
-  }
+    margin: 20px;
+    border-color: #0f152b;
 }
 .icono1{
     background: rgb(232, 234, 244); 
@@ -331,10 +675,6 @@ form{
     overflow-clip-margin: content-box;
     stroke: currentColor;
 
-}
-* {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -366,22 +706,6 @@ body {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-}
-
-.card {
-    background: white;
-    flex: 1;
-    min-width: 300px;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.card h3 {
-    font-size: 12px;
-    color: #666;
-    letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 .score-display {
@@ -524,4 +848,49 @@ body {
     justify-content: center;
     font-size: 12px;
     font-weight: bold;
+}
+/* --- Estilos para pantallas pequeñas (Móviles / Tablets) --- */
+@media (max-width: 750px) {
+    /* 1. Ocultamos el logo si tampoco lo quieres, o solo los enlaces */
+    .enlace-menu {
+        display: none !important;
+    }
+
+    /* 2. Ajustamos la lista para que el botón se centre o se acomode bien */
+    nav ul {
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+}
+
+@media (max-width: 400px) {
+  .button-group {
+    /* Cambia a una sola columna para que los botones tengan todo el ancho disponible */
+    grid-template-columns: 1fr; 
+    grid-template-rows: auto;
+  }
+  
+  .btn-option {
+    font-size: 14px;
+    padding: 10px;
+  }
+  .escala {
+    /* Cambia a una sola columna para que los botones tengan todo el ancho disponible */
+    grid-template-columns: 1fr; 
+    grid-template-rows: auto;
+  }
+  .section1{
+    width: 92%;
+    max-width: 1200px;
+    margin: 100px auto;
+}
+}
+@media (max-width: 900px) {
+    .section1-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
 }
