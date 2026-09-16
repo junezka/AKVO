@@ -539,6 +539,10 @@ form{
     color: #533e3e;
     cursor: not-allowed; 
 }
+#miBoton {
+    width: 100%;
+    padding: 12px;
+}
 
 .header-modulos {
     display: flex;

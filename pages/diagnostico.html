@@ -6,7 +6,7 @@
     <title>Dashboard de Diagnóstico - AKVO Consulting</title>
     <link rel="stylesheet" href="../styles/style.css">
     <!-- CORREGIDO: Librería Chart.js para renderizar el gráfico de radar -->
-    <script src="https://jsdelivr.net"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="formulario">
 
@@ -30,52 +30,35 @@
             <p>Basado en tus respuestas, aquí está una visión honesta de dónde se encuentra tu negocio hoy.</p>
         </section>
 
-        <!-- GRID DE RESULTADOS SUPERIORES -->
         <div class="grid-layout">
-            <!-- Tarjeta 1: Puntuación e Indicadores -->
-            <div class="card">
-                <h3>ÍNDICE DE MADUREZ EMPRESARIAL H²</h3>
-                <div class="score-display">
-                    <span class="score-number" id="finalScore">60</span>
+            <div class="card3">
+                <h3 style="font-size: 20px;">ÍNDICE DE MADUREZ EMPRESARIAL H²</h3>
+                <div class="score-display" style="font-size: 26px; font-weight: 700;">
+                    <span class="score-number" id="finalScore">0</span>
                     <span class="score-total">/100</span>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="scoreProgress"></div>
                 </div>
-                <div class="level-badge-container">
-                    <span class="level-badge" id="levelText">Nivel: En desarrollo</span>
-                </div>
-                <p id="feedbackText">Existen avances importantes, pero la consolidación es parcial. Con un acompañamiento adecuado el potencial es alto.</p>
-                
-                <!-- AGREGADO: Bloque inferior con los puntos fuertes y prioritarios de Figma -->
-                <div class="area-highlights">
-                    <div class="highlight-item">
-                        <span class="highlight-title">ÁREA MÁS FUERTE</span>
-                        <span class="highlight-value fuerte" id="strongestArea">Procesos</span>
-                    </div>
-                    <div class="highlight-item">
-                        <span class="highlight-title">ÁREA PRIORITARIA</span>
-                        <span class="highlight-value prioritaria" id="priorityArea">Contable</span>
-                    </div>
-                </div>
+                <span class="level-badge" id="levelText">Nivel: Calculando...</span>
+                <p id="feedbackText">Completando análisis...</p>
             </div>
-
-            <!-- Tarjeta 2: Gráfico de Radar -->
-            <div class="card card-radar">
-                <h3>PERFIL DE MADUREZ POR ÁREA</h3>
+            <!-- Tarjeta 2: Gráfico -->
+            <div class="card3">
+                <h3 style="font-size: 20px;">PERFIL DE MADUREZ POR ÁREA</h3>
                 <div class="chart-container">
                     <canvas id="radarChart"></canvas>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN DE RECOMENDACIONES POR ÁREA (Desglose inferior) -->
-        <div class="areas-section">
-            <h2>Diagnóstico por área</h2>
-            <div id="areasContainer" class="areas-container">
-                <!-- Se insertarán aquí de forma fluida mediante tu script.js -->
-            </div>
+    <div class="areas-section">
+        <h2>Diagnóstico por área</h2>
+        <div id="areasContainer" class="areas-container">
+            <!-- Las tarjetas se insertarán aquí con JavaScript -->
         </div>
+    </div>
+    </div>
+    <script src="script.js"></script>
 
         <!-- 3. TARJETA DE CIERRE -->
         <section class="card-diagnostico">
