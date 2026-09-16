@@ -5,49 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Diagnóstico - AKVO Consulting</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <!-- Cargar librería Chart.js para el gráfico de radar -->
+    <!-- CORREGIDO: Librería Chart.js para renderizar el gráfico de radar -->
     <script src="https://jsdelivr.net"></script>
 </head>
 <body class="formulario">
 
-    <!-- 1. ENCABEZADO CORPORATIVO (Primer HTML) -->
+    <!-- 1. ENCABEZADO CORPORATIVO -->
     <section>
         <header class="header">
-                <nav style="background: rgba(21, 29, 59, 0.96);">
-                    <a href="../pages/index.html">Inicio</a>
-                    <img src="../images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
-                </nav>
+            <nav style="background: rgba(21, 29, 59, 0.96);">
+                <a href="../pages/index.html">Inicio</a>
+                <img src="../images/image-5-DxJ_jtyd.png" alt="AKVO Consulting" class="logo">
+            </nav>
         </header>
     </section>
 
-    <!-- 2. CONTENEDOR PRINCIPAL DEL DASHBOARD (Segundo HTML) -->
+    <!-- 2. CONTENEDOR PRINCIPAL DEL DASHBOARD -->
     <div class="dashboard-container">
         
-        <!-- CABECERA DE TEXTOS (Fusión de ambos HTML) -->
+        <!-- CABECERA DE TEXTOS -->
         <section class="header-form">
             <p class="sombreado-verde">Diagnóstico completado · AKVO Consulting</p>
             <h2 style="font-size: 40px;">Tu informe de <strong>situación empresarial</strong></h2>
             <p>Basado en tus respuestas, aquí está una visión honesta de dónde se encuentra tu negocio hoy.</p>
         </section>
 
-        <!-- GRID DE RESULTADOS (Segundo HTML) -->
+        <!-- GRID DE RESULTADOS SUPERIORES -->
         <div class="grid-layout">
-            <!-- Tarjeta 1: Puntuación -->
+            <!-- Tarjeta 1: Puntuación e Indicadores -->
             <div class="card">
                 <h3>ÍNDICE DE MADUREZ EMPRESARIAL H²</h3>
                 <div class="score-display">
-                    <span class="score-number" id="finalScore">0</span>
+                    <span class="score-number" id="finalScore">60</span>
                     <span class="score-total">/100</span>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="scoreProgress"></div>
                 </div>
-                <span class="level-badge" id="levelText">Nivel: Calculando...</span>
-                <p id="feedbackText">Completando análisis...</p>
+                <div class="level-badge-container">
+                    <span class="level-badge" id="levelText">Nivel: En desarrollo</span>
+                </div>
+                <p id="feedbackText">Existen avances importantes, pero la consolidación es parcial. Con un acompañamiento adecuado el potencial es alto.</p>
+                
+                <!-- AGREGADO: Bloque inferior con los puntos fuertes y prioritarios de Figma -->
+                <div class="area-highlights">
+                    <div class="highlight-item">
+                        <span class="highlight-title">ÁREA MÁS FUERTE</span>
+                        <span class="highlight-value fuerte" id="strongestArea">Procesos</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-title">ÁREA PRIORITARIA</span>
+                        <span class="highlight-value prioritaria" id="priorityArea">Contable</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Tarjeta 2: Gráfico -->
-            <div class="card">
+            <!-- Tarjeta 2: Gráfico de Radar -->
+            <div class="card card-radar">
                 <h3>PERFIL DE MADUREZ POR ÁREA</h3>
                 <div class="chart-container">
                     <canvas id="radarChart"></canvas>
@@ -55,15 +69,15 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE RECOMENDACIONES POR ÁREA (Segundo HTML) -->
+        <!-- SECCIÓN DE RECOMENDACIONES POR ÁREA (Desglose inferior) -->
         <div class="areas-section">
             <h2>Diagnóstico por área</h2>
             <div id="areasContainer" class="areas-container">
-                <!-- Las tarjetas se insertarán aquí con JavaScript -->
+                <!-- Se insertarán aquí de forma fluida mediante tu script.js -->
             </div>
         </div>
 
-        <!-- 3. TARJETA DE CIERRE "EL DIAGNÓSTICO ES SOLO EL COMIENZO" (Primer HTML) -->
+        <!-- 3. TARJETA DE CIERRE -->
         <section class="card-diagnostico">
             <p class="sombreado-verde">El diagnóstico es solo el comienzo</p>
             <h2>Tu negocio tiene potencial.</h2>
@@ -72,11 +86,11 @@
             
             <ul>
                 <button style="box-shadow: 0 8px 32px #2d8c6a66;" onclick="enviarCorreo()">
-                    Asesoria Personalizada
+                    Asesoría Personalizada
                 </button>
                 <a href="../pages/formulario1.html" class="metodologia">Repetir diagnóstico</a>
             </ul>
-            ---------------------------------------------------------------------------------------
+            <div class="divider-line"></div>
             <div class="iconos-diagnosticos">
                 <div>🔍<p>Diagnóstico Completo</p></div>
                 <div>📋<p>Plan de acción personalizado</p></div>
@@ -85,12 +99,10 @@
         </section>
     </div>
 
-        
     <br>
+    <p class="disclaimer-text">Este diagnóstico es indicativo y no reemplaza una consultoría profesional. AKVO Consulting ofrece análisis profundos y soluciones personalizadas adaptadas a la realidad de cada organización.</p>
 
-    <p style="text-align: center; margin: 20px 5%; font-size: 14px; max-width: 900%; padding: 20px;">Este diagnóstico es indicativo y no reemplaza una consultoría profesional. AKVO Consulting ofrece análisis profundos y soluciones personalizadas adaptadas a la realidad de cada organización.</p>
-
-    <!-- VINCULACIÓN DEL SCRIPT EXTERNO (Segundo HTML) -->
+    <!-- VINCULACIÓN DEL SCRIPT EXTERNO -->
     <script src="script.js"></script>
     
     <footer>
@@ -98,22 +110,15 @@
         <p>© 2026 AKVO Consulting. Todos los derechos reservados</p>
         <h3>Sinergizar · Agilizar · Transformar</h3>
     </footer>
-</body>
-</html>
+
 <script>
 function enviarCorreo() {
     const correo = "akvo.3116@gmail.com";
     const asunto = "Solicitud de Asesoría Personalizada - AKVO";
-    
-    // Construimos el mensaje con saltos de línea limpios
-    const mensaje = "Buen dia equipo de AKVO deseo una asesoria personalizada\n" +
-                    "Nombre empresa:\n" +
-                    "Numero de contacto:";
-    
-    // Usamos encodeURIComponent para obligar al navegador a procesar todo el texto sin pérdidas
+    const mensaje = "Buen dia equipo de AKVO deseo una asesoria personalizada\nNombre empresa:\nNumero de contacto:";
     const urlmailto = `mailto:${correo}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(mensaje)}`;
-    
-    // Abrimos el gestor de correos
     window.location.href = urlmailto;
 }
 </script>
+</body>
+</html>

@@ -1,8 +1,12 @@
 import json
 import os
-from pathlib import Path
-
 import psycopg
+import smtplib
+
+
+from pathlib import Path
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
@@ -184,7 +188,8 @@ def finalize_diagnostico(diagnostico_id):
 
     try:
         conn = get_connection()
-        with conn.cursor() as cursor:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            # 1. Guardamos los puntajes finales en la fila del cliente
             cursor.execute(
                 """
                 UPDATE diagnosticos
@@ -207,9 +212,67 @@ def finalize_diagnostico(diagnostico_id):
                     diagnostico_id,
                 ),
             )
+            
+            # 2. Consultamos los datos de contacto y nombre de la empresa para el mail
+            cursor.execute("SELECT empresa_nombre, empresa_contacto, etapa_negocio FROM diagnosticos WHERE id = %s", (diagnostico_id,))
+            cliente = cursor.fetchone()
+            
         conn.commit()
         conn.close()
-        return jsonify({"success": True, "message": "Diagnóstico final guardado"})
+
+        # 3. PROCESO DE ENVÍO DE EMAIL AUTOMÁTICO (try-catch interno para no romper la web si falla)
+        if cliente:
+            try:
+                # CONFIGURACIÓN SMTP (Ejemplo con Gmail)
+                remitente = "junezk09@hotmail.com"  # Correo desde donde sale
+                destinatario = "junezk09@hotmail.com"  # Tu correo de control
+                # IMPORTANTE: Esta NO es tu clave normal, es una 'Contraseña de Aplicación' generada en Google Account
+                password_aplicacion = os.getenv("SMTP_PASSWORD", "fgnqcjlfitutoxyn") 
+
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = f"📊 Nuevo Diagnóstico Completado: {cliente['empresa_nombre']}"
+                msg['From'] = f"Web AKVO Consulting <{remitente}>"
+                msg['To'] = destinatario
+
+                # Diseño HTML limpio para que el reporte te llegue estructurado
+                html_reporte = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; color: #1a1a3a; padding: 20px;">
+                    <h2 style="color: #151d3b; border-bottom: 2px solid #389e70; padding-bottom: 10px;">¡Nuevo Diagnóstico Recibido!</h2>
+                    <p>Un cliente ha finalizado el índice de madurez en la web corporativa.</p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <tr style="background-color: #f4f6f9;"><td style="padding: 10px; font-weight: bold;">Empresa:</td><td style="padding: 10px;">{cliente['empresa_nombre']}</td></tr>
+                        <tr><td style="padding: 10px; font-weight: bold;">Contacto:</td><td style="padding: 10px;">{cliente['empresa_contacto']}</td></tr>
+                        <tr style="background-color: #f4f6f9;"><td style="padding: 10px; font-weight: bold;">Etapa:</td><td style="padding: 10px;">{cliente['etapa_negocio']}</td></tr>
+                        <tr style="background-color: #e2efea; font-size: 18px; font-weight: bold;"><td style="padding: 10px; color: #2b7a5f;">PUNTAJE GENERAL H²:</td><td style="padding: 10px; color: #2b7a5f;">{int(scores['total_score'])}/100</td></tr>
+                    </table>
+
+                    <h3 style="color: #151d3b; margin-top: 25px;">Desglose Analítico por Módulo:</h3>
+                    <ul>
+                        <li><strong>Financiera:</strong> {int(scores['financiera'])}%</li>
+                        <li><strong>Contable y Tributaria:</strong> {int(scores['contable'])}%</li>
+                        <li><strong>Procesos y Calidad:</strong> {int(scores['procesos'])}%</li>
+                        <li><strong>Transformación Digital:</strong> {int(scores['digital'])}%</li>
+                        <li><strong>Estrategia:</strong> {int(scores['estrategia'])}%</li>
+                    </ul>
+                    <p style="font-size: 12px; color: #8a94a6; margin-top: 30px;">ID del registro en base de datos Supabase: #{diagnostico_id}</p>
+                </body>
+                </html>
+                """
+                msg.attach(MIMEText(html_reporte, 'html'))
+
+                # Conexión segura con el servidor de Google
+                server = smtplib.SMTP('://gmail.com', 587)
+                server.starttls()
+                server.login(remitente, password_aplicacion)
+                server.sendmail(remitente, destinatario, msg.as_string())
+                server.quit()
+                print("📧 Correo de notificación enviado exitosamente a AKVO.")
+            except Exception as mail_exc:
+                print(f"⚠️ Error al despachar el correo: {mail_exc}")
+
+        return jsonify({"success": True, "message": "Diagnóstico final guardado y notificado"})
     except Exception as exc:
         return jsonify({"success": False, "message": "Error al guardar diagnóstico final", "error": str(exc)}), 500
 
