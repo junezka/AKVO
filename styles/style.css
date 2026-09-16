@@ -291,9 +291,9 @@ h3{
     width: 25%;
 }
 .section1{
+    margin: 60px auto;
     width: 92%;
     max-width: 1200px;
-    padding: 60px 0;
 }
 
 .section1-container {
@@ -302,8 +302,8 @@ h3{
     gap: 60px;                         /* Espacio de separación en el medio */
     width: 92%;
     max-width: 1200px;
-    margin: 0 auto;                    /* Centra todo el bloque en la pantalla */
-    align-items: start;
+    margin: 60px auto;                    /* Centra todo el bloque en la pantalla */
+    text-align: start;
 }
 
 /* El icono negro pequeño de cada tarjeta */
@@ -370,7 +370,7 @@ h3{
 .section2{
     align-content: center;
     background-color: #f7f8fc;
-    margin: 20px 4%;
+    margin: 60px auto;
     width: 92%;
     max-width: 1200px;
 }
@@ -378,7 +378,7 @@ h3{
     gap: 60px;                         /* Espacio de separación en el medio */
     width: 92%;
     max-width: 1200px;
-    margin: 0 auto;                    /* Centra todo el bloque en la pantalla */
+    margin: 60px auto;                    /* Centra todo el bloque en la pantalla */
     text-align: center;
 }
 .section2-container h4{
@@ -634,8 +634,13 @@ form{
   margin-top: 10px;
   margin-bottom: 25px;
 }
+
 .number-group input[type="radio"] {
-  display: none !important; 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
 }
 
 .number-group input[type="radio"]:checked + .escala-button {
