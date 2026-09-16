@@ -847,13 +847,6 @@ body.formulario {
     height: 320px;
 }
 
-/* --- ESTILOS PARA LAS FILAS DEL DIAGNÓSTICO POR ÁREA --- */
-.areas-section h2 {
-    font-size: 22px;
-    color: #1a202c;
-    margin-bottom: 20px;
-    font-weight: 700;
-}
 
 /* Estilos de las etiquetas de colores dentro de las filas (inyectadas por tu JS) */
 .tag-critico { background-color: #fff5f5; color: #e53e3e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
@@ -884,6 +877,167 @@ body.formulario {
     line-height: 1.5;
 }
 
+/* --- ACORDEÓN DE ÁREAS (FIGMA STYLE) --- */
+.areas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.area-accordion-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef0f7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.area-accordion-card[open] {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.area-accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 20px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.area-accordion-header::-webkit-details-marker {
+    display: none;
+}
+
+.area-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background-color: #f4f6fb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.area-main-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.area-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.area-title-text {
+    font-size: 16px;
+    font-weight: 700 !important;
+    color: #151d3b;
+}
+
+/* Badges de estado */
+.area-status-badge {
+    font-size: 12px;
+    font-weight: 600 !important;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.badge-basico { background-color: #fde8e4; color: #e55b3c; }
+.badge-desarrollo { background-color: #fef4e5; color: #d99221; }
+.badge-consolidado { background-color: #e6f6f0; color: #2d8c6a; }
+
+/* Barra de progreso */
+.area-progress-track {
+    width: 100%;
+    height: 8px;
+    background-color: #f0f2f8;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.area-progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.bar-basico { background-color: #e55b3c; }
+.bar-desarrollo { background-color: #d99221; }
+.bar-consolidado { background-color: #2d8c6a; }
+
+.area-score-val {
+    font-size: 14px;
+    color: #8a94a6;
+    min-width: 60px;
+    text-align: right;
+}
+
+.area-score-val strong {
+    color: #151d3b;
+    font-size: 16px;
+}
+
+.area-chevron {
+    color: #a0aec0;
+    transition: transform 0.2s ease;
+}
+
+.area-accordion-card[open] .area-chevron {
+    transform: rotate(180deg);
+}
+
+/* Contenido desplegable */
+.area-accordion-content {
+    padding: 0 24px 20px 92px;
+    border-top: 1px solid #f4f6fb;
+    margin-top: 10px;
+    padding-top: 16px;
+}
+
+.area-steps-title {
+    font-size: 12px;
+    font-weight: 700 !important;
+    color: #8a94a6;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.area-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.area-steps li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+.step-num {
+    background-color: #eef0f7;
+    color: #151d3b;
+    font-weight: 700 !important;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
 
 /* --- Estilos para pantallas pequeñas (Móviles / Tablets) --- */
 @media (max-width: 750px) {
