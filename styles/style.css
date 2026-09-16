@@ -854,6 +854,27 @@ body {
     font-size: 12px;
     font-weight: bold;
 }
+.iconos-diagnosticos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 20px 4%;
+}
+
+.card-diagnostico{
+    background-color: #1e2a4a;
+    color: white;
+    text-align: center;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    justify-content: space-between;
+}
+
 /* --- Estilos para pantallas pequeñas (Móviles / Tablets) --- */
 @media (max-width: 750px) {
     /* 1. Ocultamos el logo si tampoco lo quieres, o solo los enlaces */
