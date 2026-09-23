@@ -120,7 +120,7 @@ def create_diagnostico():
 
 
 @app.post("/api/modulos")
-def save_module():
+def modulos():
     data = request.get_json(silent=True) or {}
     diagnostico_id = data.get("diagnostico_id")
     modulo = data.get("modulo")
