@@ -156,8 +156,7 @@ def save_module():
                 f"""
                 UPDATE diagnosticos
                 SET {score_column} = %s,
-                    {response_column} = %s,
-                    updated_at = NOW()
+                    {response_column} = %s
                 WHERE id = %s
                 """,
                 (float(score), json.dumps(respuestas, ensure_ascii=False), diagnostico_id),
@@ -176,9 +175,7 @@ def list_diagnosticos():
     try:
         conn = get_connection()
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute(
-                "SELECT * FROM diagnosticos ORDER BY created_at DESC"
-            )
+            cursor.execute("SELECT * FROM diagnosticos ORDER BY id DESC")
             diagnosticos = cursor.fetchall()
         conn.close()
         return jsonify({"success": True, "data": diagnosticos})
