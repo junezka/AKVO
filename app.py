@@ -71,7 +71,6 @@ def init_db():
                 )
                 if not cursor.fetchone()[0]:
                     cursor.execute(f"ALTER TABLE diagnosticos ADD COLUMN {column} JSONB DEFAULT NULL")
-            cursor.execute("DROP TABLE IF EXISTS modulos")
         conn.commit()
         conn.close()
     except Exception as exc:
