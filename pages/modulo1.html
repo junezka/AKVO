@@ -154,7 +154,7 @@
     const formulario = document.getElementById('form1');
     const boton = document.getElementById('miBoton');
 
-    // Activar el botón solo cuando todas se respondan
+    // Activar el botón solo cuando todas las preguntas estén respondidas
     formulario.addEventListener('input', function() {
         const p1Valida = formulario.querySelector('input[name="p1"]:checked') !== null;
         const p2Valida = formulario.querySelector('input[name="p2"]:checked') !== null;
@@ -172,27 +172,33 @@
     });
 
     async function ensureDiagnosticoId() {
-        const existingId = Number(localStorage.getItem('akvoDiagnosticoId'));
+        // Normalizamos el uso de 'diagnostico_id'
+        let existingId = Number(localStorage.getItem('diagnostico_id') || localStorage.getItem('akvoDiagnosticoId'));
         if (existingId) return existingId;
 
         const nombre = localStorage.getItem('akvoEmpresaNombre') || 'Sin nombre';
         const contacto = localStorage.getItem('akvoContacto') || 'Sin contacto';
         const etapa = localStorage.getItem('akvoEtapaNegocio') || 'No especificada';
 
-        const response = await fetch('/api/diagnosticos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                empresa_nombre: nombre,
-                empresa_contacto: contacto,
-                etapa_negocio: etapa
-            })
-        });
+        try {
+            const response = await fetch('/api/diagnosticos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    empresa_nombre: nombre,
+                    empresa_contacto: contacto,
+                    etapa_negocio: etapa
+                })
+            });
 
-        const data = await response.json();
-        if (data && data.id) {
-            localStorage.setItem('akvoDiagnosticoId', String(data.id));
-            return Number(data.id);
+            const data = await response.json();
+            if (data && data.id) {
+                localStorage.setItem('diagnostico_id', String(data.id));
+                localStorage.setItem('akvoDiagnosticoId', String(data.id));
+                return Number(data.id);
+            }
+        } catch (err) {
+            console.error('Error al asegurar diagnostico_id:', err);
         }
 
         return null;
@@ -210,8 +216,14 @@
         const suma = q1 + q2 + q3 + q4 + q5;
         const porcentajeFinanciera = (suma / 25) * 100;
 
-        localStorage.setItem('scoreFinanciera', porcentajeFinanciera);
+        // Objeto con las respuestas de este módulo
+        const respuestasObj = { p1: q1, p2: q2, p3: q3, p4: q4, p5: q5 };
 
+        // 1. Guardar localmente para que el Dashboard lo encuentre si es necesario
+        localStorage.setItem('scoreFinanciera', porcentajeFinanciera);
+        localStorage.setItem('respuestas_financiera', JSON.stringify(respuestasObj));
+
+        // 2. Enviar directamente al servidor
         const diagnosticoId = await ensureDiagnosticoId();
         if (diagnosticoId) {
             try {
@@ -222,7 +234,7 @@
                         diagnostico_id: diagnosticoId,
                         modulo: 'financiera',
                         score: porcentajeFinanciera,
-                        respuestas: { p1: q1, p2: q2, p3: q3, p4: q4, p5: q5 }
+                        respuestas: respuestasObj
                     })
                 });
             } catch (error) {
