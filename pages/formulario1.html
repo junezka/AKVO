@@ -62,34 +62,71 @@
             </button>
         </section>
     </form>
-
     <script>
-      const formulario = document.getElementById('formDiagnostico');
-      const inputNombre = document.getElementById('nombre');
-      const inputContacto = document.getElementById('contacto');
-      const boton = document.getElementById('miBoton');
+    const formulario = document.getElementById('formDiagnostico');
+    const inputNombre = document.getElementById('nombre');
+    const inputContacto = document.getElementById('contacto');
+    const boton = document.getElementById('miBoton');
 
-      formulario.addEventListener('input', function() {
+    // Validar inputs en tiempo real
+    formulario.addEventListener('input', function() {
         const nombreValido = inputNombre.value.trim() !== '';
         const contactoValido = inputContacto.value.trim() !== '';
         const radioSeleccionado = formulario.querySelector('input[name="opcion"]:checked') !== null;
 
-        if (nombreValido && contactoValido && radioSeleccionado) {
-          boton.disabled = false;
-        } else {
-          boton.disabled = true;
-        }
-      });
+        boton.disabled = !(nombreValido && contactoValido && radioSeleccionado);
+    });
 
-      formulario.addEventListener('submit', function() {
+    // Enviar datos al servidor al hacer Submit
+    formulario.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Previene la recarga/navegación inmediata
+
+        boton.disabled = true;
+        boton.textContent = 'Guardando...';
+
         const nombreEmpresa = inputNombre.value.trim();
         const contactoEmpresa = inputContacto.value.trim();
         const etapaSeleccionada = formulario.querySelector('input[name="opcion"]:checked');
+        const etapaTexto = etapaSeleccionada ? etapaSeleccionada.parentElement.textContent.trim() : 'No especificada';
 
+        // 1. Respaldar localmente
         localStorage.setItem('akvoEmpresaNombre', nombreEmpresa);
         localStorage.setItem('akvoContacto', contactoEmpresa);
-        localStorage.setItem('akvoEtapaNegocio', etapaSeleccionada ? etapaSeleccionada.parentElement.textContent.trim() : 'No especificada');
-      });
+        localStorage.setItem('akvoEtapaNegocio', etapaTexto);
+
+        try {
+        // 2. Enviar petición al backend Flask para crear la fila en Supabase
+        const response = await fetch('/api/diagnosticos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+            empresa_nombre: nombreEmpresa,
+            empresa_contacto: contactoEmpresa,
+            etapa_negocio: etapaTexto
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.id) {
+            // 3. Guardar el ID retornado por PostgreSQL en el localStorage
+            localStorage.setItem('diagnostico_id', data.id);
+            localStorage.setItem('akvoDiagnosticoId', data.id);
+
+            // 4. Redirigir al primer módulo
+            window.location.href = 'modulo1.html';
+        } else {
+            alert('Error al crear el diagnóstico: ' + (data.message || 'Respuesta inválida'));
+            boton.disabled = false;
+            boton.textContent = 'Comenzar Diagnóstico';
+        }
+        } catch (error) {
+        console.error('Error de conexión:', error);
+        alert('Ocurrió un error al conectar con el servidor.');
+        boton.disabled = false;
+        boton.textContent = 'Comenzar Diagnóstico';
+        }
+    });
     </script>
 </body>
 </html>
