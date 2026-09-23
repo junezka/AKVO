@@ -96,7 +96,6 @@ function renderChart(data) {
 
 // 5. Guardar puntuaciones en Backend Supabase / Flask
 async function saveDiagnosisToDb() {
-    // Lee la clave de diagnóstico estandarizada
     const diagnosticoId = Number(localStorage.getItem('diagnostico_id') || localStorage.getItem('akvoDiagnosticoId'));
     if (!diagnosticoId) {
         console.warn('No hay diagnóstico activo para finalizar.');
@@ -112,9 +111,8 @@ async function saveDiagnosisToDb() {
     ];
 
     try {
-        // Guarda la puntuación de cada área enviando a /api/modulos
         for (const item of modulos) {
-            await fetch('/api/modulos', {
+            const response = await fetch('/api/modulos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -124,10 +122,16 @@ async function saveDiagnosisToDb() {
                     respuestas: JSON.parse(localStorage.getItem(`respuestas_${item.modulo}`) || '{}')
                 })
             });
+
+            const result = await response.json();
+            if (!response.ok) {
+                console.error(`Error al guardar ${item.modulo}:`, result.message);
+            } else {
+                console.log(`Módulo ${item.modulo} guardado exitosamente.`);
+            }
         }
-        console.log('Diagnóstico guardado correctamente en Supabase.');
     } catch (error) {
-        console.warn('Error al guardar en el servidor:', error.message);
+        console.error('Error de red/conexión con el servidor:', error.message);
     }
 }
 
