@@ -3,7 +3,6 @@ import os
 import psycopg
 import smtplib
 
-
 from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -152,6 +151,7 @@ def save_module():
     try:
         conn = get_connection()
         with conn.cursor() as cursor:
+            # CORREGIDO: Se quitó la referencia a updated_at que hacía fallar el UPDATE
             cursor.execute(
                 f"""
                 UPDATE diagnosticos
@@ -170,12 +170,16 @@ def save_module():
     except Exception as exc:
         return jsonify({"success": False, "message": "Error al guardar el módulo", "error": str(exc)}), 500
 
+
 @app.get("/api/diagnosticos")
 def list_diagnosticos():
     try:
         conn = get_connection()
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute("SELECT * FROM diagnosticos ORDER BY id DESC")
+            # CORREGIDO: Se cambió ORDER BY created_at DESC por ORDER BY id DESC
+            cursor.execute(
+                "SELECT * FROM diagnosticos ORDER BY id DESC"
+            )
             diagnosticos = cursor.fetchall()
         conn.close()
         return jsonify({"success": True, "data": diagnosticos})
@@ -211,9 +215,6 @@ def serve_frontend(filename):
     return jsonify({"success": False, "message": "Archivo no encontrado"}), 404
 
 
-init_db()
-
-
 @app.route("/<filename>")
 def serve_frontend_legacy(filename):
     if filename.endswith(".html"):
@@ -244,6 +245,7 @@ def admin_page():
     return send_file(str(BASE_DIR / "admin.html"))
 
 
+# Inicializar la base de datos al arrancar
 init_db()
 
 
