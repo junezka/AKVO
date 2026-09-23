@@ -137,6 +137,7 @@ def modulos():
         "digital": "respuestas_digital",
         "estrategia": "respuestas_estrategia",
     }.get(modulo)
+    
     score_column = {
         "financiera": "financiera",
         "contable": "contable",
@@ -144,13 +145,14 @@ def modulos():
         "digital": "digital",
         "estrategia": "estrategia",
     }.get(modulo)
+
     if not response_column:
         return jsonify({"success": False, "message": "Módulo no válido."}), 400
 
     try:
         conn = get_connection()
         with conn.cursor() as cursor:
-            # CORREGIDO: Se quitó la referencia a updated_at que hacía fallar el UPDATE
+            # 1. Guardar el score y las respuestas del módulo actual
             cursor.execute(
                 f"""
                 UPDATE diagnosticos
@@ -160,12 +162,40 @@ def modulos():
                 """,
                 (float(score), json.dumps(respuestas, ensure_ascii=False), diagnostico_id),
             )
+            
             if cursor.rowcount == 0:
                 conn.close()
                 return jsonify({"success": False, "message": "Diagnóstico no encontrado."}), 404
+
+            # 2. Obtener los 5 scores del diagnóstico para recalcular el total_score
+            cursor.execute(
+                """
+                SELECT financiera, contable, procesos, digital, estrategia
+                FROM diagnosticos
+                WHERE id = %s
+                """,
+                (diagnostico_id,),
+            )
+            row = cursor.fetchone()
+            
+            if row:
+                f, c, p, d, e = [float(val or 0) for val in row]
+                # Promedio simple de las 5 áreas
+                total_score = round((f + c + p + d + e) / 5.0, 2)
+
+                # 3. Actualizar la columna total_score
+                cursor.execute(
+                    """
+                    UPDATE diagnosticos
+                    SET total_score = %s
+                    WHERE id = %s
+                    """,
+                    (total_score, diagnostico_id),
+                )
+
         conn.commit()
         conn.close()
-        return jsonify({"success": True, "message": f"Módulo {modulo} guardado"})
+        return jsonify({"success": True, "message": f"Módulo {modulo} guardado y total_score actualizado"})
     except Exception as exc:
         return jsonify({"success": False, "message": "Error al guardar el módulo", "error": str(exc)}), 500
 
