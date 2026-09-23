@@ -31,27 +31,34 @@ function enviarCorreo() {
 
 // 3. Actualizar la tarjeta de puntuación
 function updateScoreCard(data) {
-    document.getElementById('finalScore').innerText = data.totalScore;
-    document.getElementById('scoreProgress').style.width = `${data.totalScore}%`;
+    const finalScoreEl = document.getElementById('finalScore');
+    if (finalScoreEl) finalScoreEl.innerText = data.totalScore;
+
+    const scoreProgressEl = document.getElementById('scoreProgress');
+    if (scoreProgressEl) scoreProgressEl.style.width = `${data.totalScore}%`;
     
     const levelBadge = document.getElementById('levelText');
     const feedback = document.getElementById('feedbackText');
 
-    if (data.totalScore < 60) {
-        levelBadge.innerText = "Nivel: Básico";
-        feedback.innerText = "Hay fundamentos mínimos, pero faltan estructuras sólidas. Es necesario intervenir con urgencia para avanzar.";
-    } else if (data.totalScore < 80) {
-        levelBadge.innerText = "Nivel: En Desarrollo";
-        feedback.innerText = "Existen avances importantes. Potencial alto.";
-    } else {
-        levelBadge.innerText = "Nivel: Avanzado";
-        feedback.innerText = "Estructuras muy sólidas. Listo para escalar.";
+    if (levelBadge && feedback) {
+        if (data.totalScore < 60) {
+            levelBadge.innerText = "Nivel: Básico";
+            feedback.innerText = "Hay fundamentos mínimos, pero faltan estructuras sólidas. Es necesario intervenir con urgencia para avanzar.";
+        } else if (data.totalScore < 80) {
+            levelBadge.innerText = "Nivel: En Desarrollo";
+            feedback.innerText = "Existen avances importantes. Potencial alto.";
+        } else {
+            levelBadge.innerText = "Nivel: Avanzado";
+            feedback.innerText = "Estructuras muy sólidas. Listo para escalar.";
+        }
     }
 }
 
 // 4. Renderizar gráfico Radar
 function renderChart(data) {
-    const ctx = document.getElementById('radarChart').getContext('2d');
+    const canvas = document.getElementById('radarChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     
     new Chart(ctx, {
         type: 'radar',
@@ -87,39 +94,40 @@ function renderChart(data) {
     });
 }
 
-// 5. Guardar diagnóstico en Backend MySQL/Flask
+// 5. Guardar puntuaciones en Backend Supabase / Flask
 async function saveDiagnosisToDb() {
-    const diagnosticoId = Number(localStorage.getItem('akvoDiagnosticoId'));
+    // Lee la clave de diagnóstico estandarizada
+    const diagnosticoId = Number(localStorage.getItem('diagnostico_id') || localStorage.getItem('akvoDiagnosticoId'));
     if (!diagnosticoId) {
         console.warn('No hay diagnóstico activo para finalizar.');
         return;
     }
 
-    const payload = {
-        financiera: pFinanciera,
-        contable: pContable,
-        procesos: pProcesos,
-        digital: pDigital,
-        estrategia: pEstrategia,
-        total_score: promedioTotal
-    };
+    const modulos = [
+        { modulo: 'financiera', score: pFinanciera },
+        { modulo: 'contable', score: pContable },
+        { modulo: 'procesos', score: pProcesos },
+        { modulo: 'digital', score: pDigital },
+        { modulo: 'estrategia', score: pEstrategia }
+    ];
 
     try {
-        const response = await fetch(`/api/diagnosticos/${diagnosticoId}/finalizar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            console.warn('No se pudo guardar el diagnóstico final en MySQL.');
-            return;
+        // Guarda la puntuación de cada área enviando a /api/modulos
+        for (const item of modulos) {
+            await fetch('/api/modulos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    diagnostico_id: diagnosticoId,
+                    modulo: item.modulo,
+                    score: item.score,
+                    respuestas: JSON.parse(localStorage.getItem(`respuestas_${item.modulo}`) || '{}')
+                })
+            });
         }
-
-        const result = await response.json();
-        console.log('Diagnóstico final guardado:', result);
+        console.log('Diagnóstico guardado correctamente en Supabase.');
     } catch (error) {
-        console.warn('Servidor Python no disponible. Se mantiene el diagnóstico en localStorage.', error.message);
+        console.warn('Error al guardar en el servidor:', error.message);
     }
 }
 
@@ -251,7 +259,7 @@ function renderAreasDetails() {
     });
 }
 
-// 7. Evento único al cargar la página
+// 7. Evento al cargar la página
 window.addEventListener('DOMContentLoaded', async () => {
     updateScoreCard(userResults);
     renderChart(userResults);
